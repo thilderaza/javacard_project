@@ -14,14 +14,14 @@ class SmartCardApplet:
         self.public_key = self.private_key.public_key()
         print("Smart card initialized with a PIN and RSA key pair.")
 
-    # Verifies if the pIN is correct
+    # Verifies if the PIN is correct
     def verify_pin(self, pin_input):
-        boolean = self.pin == pin_input
-        if(boolean):
-            print("Pin code verified")
+        if self.pin == pin_input:
+            print("PIN verified successfully.")
+            return True
         else:
-            print("Pin code not verified")
-        return boolean
+            print("Invalid PIN.")
+            return False
 
     # Signs data with private key
     def sign_and_encrypt_data(self, data):
