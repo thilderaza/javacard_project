@@ -69,3 +69,16 @@ class SmartCardApplet:
             raise ValueError("Data must be in bytes format.")
         chunks = [data[i:i + chunk_size] for i in range(0, len(data), chunk_size)]
         return chunks
+
+    # Send the IP address
+    def get_server_ip(self, sign=False):
+        server_ip = b"192.168.1.1"  # Exemple d'adresse IP
+        if sign:
+            # Signer l'adresse IP avant de l'envoyer
+            signed_ip = self.private_key.sign(
+                server_ip,
+                padding.PKCS1v15(),
+                hashes.SHA256()
+            )
+            return signed_ip
+        return server_ip
