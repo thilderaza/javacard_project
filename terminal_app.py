@@ -1,5 +1,4 @@
 from smartcard.System import readers
-import json
 
 # Different articles disponible à l'achat
 def display_articles():
@@ -23,7 +22,6 @@ def select_art(articles):
                 break
             if choice in articles:
                 item = articles[choice]
-                #select_art.append(item["name"])
                 total += item["prix"]
                 print(f"Ajouté : {item['name']} (${item['prix']:.2f})")
             else:
@@ -31,14 +29,7 @@ def select_art(articles):
         except ValueError:
             print("Entrée invalide, veuillez entrer un numéro.")
     
-    # return select_art, total
     return total
-# def transaction_final_result(articles,total):
-#     transaction = {
-#         "articles": articles,
-#         "total": round(total,2)
-#     }
-#     return transaction
 
 def send_apdu(data):
     # Récupère la liste des lecteurs disponibles
@@ -81,14 +72,9 @@ if __name__ == "__main__":
     # Permettre la sélection des articles
     selected_items, total = select_art(article)
 
-    # Générer la description de la transaction
-    # transaction = transaction_final_result(select_art, total)
-    # transaction_bytes = list(transaction)
-    
     # Afficher le résultat
     print(f"\nTotal de la transaction : ${total:.2f} ")
 
     # Données à transmettre via APDU
-    #data = [0x01, 0x02, 0x03, 0x04]
     response, sw1, sw2 = send_apdu(total)
     
