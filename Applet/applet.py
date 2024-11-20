@@ -72,9 +72,8 @@ class SmartCardApplet:
 
     # Send the IP address
     def get_server_ip(self, sign=False):
-        server_ip = b"192.168.1.1"  # Exemple d'adresse IP
+        server_ip = b"192.168.1.1"  # Example
         if sign:
-            # Signer l'adresse IP avant de l'envoyer
             signed_ip = self.private_key.sign(
                 server_ip,
                 padding.PKCS1v15(),
