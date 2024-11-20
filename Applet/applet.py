@@ -37,12 +37,11 @@ class SmartCardApplet:
 
     # Returns the public key in PEM format
     def get_public_key(self):
-        # Serialize the public key to PEM format
-        pem = self.public_key.public_bytes(
+        return self.public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-        return pem
+        
     
     # Manages the reconstitution of data sent via multiple APDUs
     def handle_multi_apdu(self, apdu_chunks):
