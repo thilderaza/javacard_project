@@ -1,4 +1,8 @@
 from smartcard.System import readers
+from datetime import datetime
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import hashes
+from smartcard.System import readers
 
 # Different articles disponible à l'achat
 def display_articles():
