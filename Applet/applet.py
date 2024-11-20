@@ -63,4 +63,9 @@ class SmartCardApplet:
 
         return full_data
 
-
+    # Divides data into fixed-size fragments
+    def split_into_apdu_chunks(self, data, chunk_size=256):
+        if not isinstance(data, bytes):
+            raise ValueError("Data must be in bytes format.")
+        chunks = [data[i:i + chunk_size] for i in range(0, len(data), chunk_size)]
+        return chunks
