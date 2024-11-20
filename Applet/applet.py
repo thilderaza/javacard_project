@@ -16,6 +16,12 @@ class SmartCardApplet:
 
     # Verifies if the pIN is correct
     def verify_pin(self, pin_input):
+        boolean = self.pin == pin_input
+        if(boolean):
+            print("Pin code verified")
+        else:
+            print("Pin code not verified")
+        return boolean
 
     # Signs data with private key
     def sign_data(self, data):
@@ -31,9 +37,21 @@ class SmartCardApplet:
 
     # Returns the public key in PEM format
     def get_public_key(self):
-        
+        # Serialize the public key to PEM format
+        pem = self.public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        )
+        return pem
     
     # Manages the reconstitution of data sent via multiple APDUs
     def handle_multi_apdu(self, apdu_chunks):
+        full_data = b''  # Initialize an empty byte string to accumulate the data
+        for chunk in apdu_chunks:
+            if not isinstance(chunk, bytes):
+                raise ValueError("Each APDU chunk must be in bytes format.")
+            full_data += chunk  # Concatenate each chunk to the full data
+
+        return full_data
 
 
