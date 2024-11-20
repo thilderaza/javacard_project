@@ -24,16 +24,27 @@ class SmartCardApplet:
         return boolean
 
     # Signs data with private key
-    def sign_data(self, data):
-        
-        if not isinstance(data, bytes):
-            raise ValueError("Data must be in bytes format.")
-        signature = self.private_key.sign(
-            data,
-            padding.PKCS1v15(),
-            hashes.SHA256()
+    def sign_and_encrypt_data(self, data):
+    if not isinstance(data, bytes):
+        raise ValueError("Data must be in bytes format.")
+    
+    # 
+    signature = self.private_key.sign(
+        data,
+        padding.PKCS1v15(),
+        hashes.SHA256()
+    )
+    
+    # Chiffrer les données signées avec la clé publique du serveur
+    encrypted_data = self.server_public_key.encrypt(
+        signature,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
         )
-        return signature
+    )
+    return encrypted_data
 
     # Returns the public key in PEM format
     def get_public_key(self):
