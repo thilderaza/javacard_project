@@ -14,3 +14,6 @@
    Package à installer : 
    ```pip install pyscard```
 
+La commande APDU est une structure utilisée pour échanger des données avec une carte à puce.
+
+On choisit les articles qui nous intéresses (les prix sont indiqués), pusi on sauvegarde le total des articles, et le total sera transmis avec la date, l'heure et l'id de la carte.
