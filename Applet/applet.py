@@ -4,7 +4,6 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 import os
 
-
 class SmartCardApplet:
 
     # Stores PIN and generates RSA key pair
@@ -14,14 +13,33 @@ class SmartCardApplet:
         self.public_key = self.private_key.public_key()
         print("Smart card initialized with a PIN and RSA key pair.")
 
-    # Verifies if the PIN is correct
-    def verify_pin(self, pin_input):
-        if self.pin == pin_input:
-            print("PIN verified successfully.")
-            return True
+    def process_apdu(self, apdu):
+        """
+        Simule la réception et le traitement d'une commande APDU.
+        Args:
+            apdu (list): Commande APDU reçue.
+        Returns:
+            tuple: (response_data, sw1, sw2)
+        """
+        cla, ins, p1, p2, lc = apdu[:5]
+        data = bytes(apdu[5:])
+
+        # Instruction pour vérifier le PIN
+        if ins == 0x20:  # INS pour "Vérifier PIN"
+            pin = data.decode('utf-8')
+            if self.verify_pin(pin):
+                return b"", 0x90, 0x00
+            else:
+                return b"", 0x63, 0x00  # PIN incorrect
+
+        # Instruction pour signer des données
+        elif ins == 0x10:  # INS pour "Signer des données"
+            signature = self.sign_and_encrypt_data(data)
+            return signature, 0x90, 0x00
+
+        # Instruction inconnue
         else:
-            print("Invalid PIN.")
-            return False
+            return b"", 0x6D, 0x00  # Instruction non supportée
 
     # Signs data with private key
     def sign_and_encrypt_data(self, data):
