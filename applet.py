@@ -82,7 +82,7 @@ class SmartCardApplet:
 
     # Send the IP address
     def get_server_ip(self, sign=False):
-        server_ip = b"192.168.1.1"  # Example
+        server_ip = b"192.168.1.1"
         if sign:
             signed_ip = self.private_key.sign(
                 server_ip,
