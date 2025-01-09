@@ -1,4 +1,6 @@
 # Projet JavaCard 2024
+Etudiants : MORELLE Dimitri, RAZAFIMAHATRATRA Mathilde, ZOU Weishen
+
 
 A installer pour faire fonctionner la carte : 
 ```sudo apt-get install libusb-dev libusb++-0.1-4c2 libusb-1.0-0-dev libccid pcscd libpcsclite1 libpcsclite-dev libpcsc-perl pcsc-tools```
