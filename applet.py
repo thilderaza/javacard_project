@@ -14,13 +14,6 @@ class SmartCardApplet:
         print("Smart card initialized with a PIN and RSA key pair.")
 
     def process_apdu(self, apdu):
-        """
-        Simulates the reception and processing of an APDU command.
-        Args:
-            apdu (list): Received APDU command.
-        Returns:
-            tuple: (response_data, sw1, sw2)
-        """
         cla, ins, p1, p2, lc = apdu[:5]
         data = bytes(apdu[5:])
 
@@ -68,8 +61,7 @@ class SmartCardApplet:
         return self.public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
-        )
-        
+        )      
     
     # Manages the reconstitution of data sent via multiple APDUs
     def handle_multi_apdu(self, apdu_chunks):

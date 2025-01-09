@@ -20,8 +20,8 @@ def verify_transaction():
     card_public_key_pem = data["card_public_key"]
 
     # Charge the public key of the card
-    from cryptography.hazmat.primitives import serialization
-    card_public_key = serialization.load_pem_public_key(card_public_key_pem.encode('utf-8'))
+
+    card_public_key = hashes.load_pem_public_key(card_public_key_pem.encode('utf-8'))
 
     # Validate the signature
     try:
@@ -51,10 +51,6 @@ def get_timestamp():
 
 @app.route("/is_card_stolen", methods=["GET"])
 def is_card_stolen():
-    """
-    Endpoint to check if a card is stolen.
-    Parameter : card_id=<ID de la carte>
-    """
     card_id = request.args.get("card_id")
     if card_id in stolen_cards:
         return jsonify({"status": "stolen", "message": f"Card {card_id} is stolen"}), 200
