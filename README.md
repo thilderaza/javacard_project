@@ -1,20 +1,16 @@
 # Projet JavaCard 2024
 
-## Part 1: JavaCard applet development
+A installer pour faire fonctionner la carte : 
+```sudo apt-get install libusb-dev libusb++-0.1-4c2 libusb-1.0-0-dev libccid pcscd libpcsclite1 libpcsclite-dev libpcsc-perl pcsc-tools```
 
-## Part 2: Terminal application development
+Dépendance python : 
+```pip install cryptography pyscard flask requests```
 
-### Terminal application :
-    - It should send the transaction data to our card
-    - As well as the card information.
-    - Transmit card information to the verification server.
-  
-   To send the APDU to a card, the application must firstly connect to a card via a smart card reader.
-   (https://pyscard.sourceforge.io/user-guide.html#smart-cards)
+Scan pour trouver la carte JavaCard : 
+```pcsc_scan ```
 
-   Package to install : 
-   ```pip install pyscard```
+Lancer le serveur : 
+```python server.py```
 
-The command APDU is a structure used to exchange data with a smart card.
-
-We select the articles that we're interested in (the prices are indicated), then we save the amount of the price of the articles, and the amount will be transmitted with the date, time and card id.
+Lancer l'application : 
+```python main.py```
