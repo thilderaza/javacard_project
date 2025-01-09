@@ -2,13 +2,13 @@ from applet import SmartCardApplet
 from terminal_app import send_apdu, display_articles, select_art, get_signed_timestamp, send_to_server
 
 if __name__ == "__main__":
-    # instance de l'applet simulée
+    # simulated applet instance
     applet = SmartCardApplet(pin="1234")
 
-    # Vérification du PIN
+    # PIN check
     print("\n=== Vérification du PIN ===")
-    pin = input("Entrez votre code PIN : ").encode('utf-8')  # Demande le PIN utilisateur
-    response, sw1, sw2 = send_apdu(pin, "verify_pin", applet)  # APDU pour vérifier le PIN
+    pin = input("Entrez votre code PIN : ").encode('utf-8')
+    response, sw1, sw2 = send_apdu(pin, "verify_pin", applet)  # # APDU to check PIN
     if sw1 == 0x90:
         print("PIN vérifié avec succès.")
     else:

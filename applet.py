@@ -14,32 +14,25 @@ class SmartCardApplet:
         print("Smart card initialized with a PIN and RSA key pair.")
 
     def process_apdu(self, apdu):
-        """
-        Simule la réception et le traitement d'une commande APDU.
-        Args:
-            apdu (list): Commande APDU reçue.
-        Returns:
-            tuple: (response_data, sw1, sw2)
-        """
         cla, ins, p1, p2, lc = apdu[:5]
         data = bytes(apdu[5:])
 
-        # Instruction pour vérifier le PIN
-        if ins == 0x20:  # INS pour "Vérifier PIN"
+        # PIN verification instruction
+        if ins == 0x20:  #  INS for Check PIN
             pin = data.decode('utf-8')
             if self.verify_pin(pin):
                 return b"", 0x90, 0x00
             else:
-                return b"", 0x63, 0x00  # PIN incorrect
+                return b"", 0x63, 0x00  # invalid PIN
 
         # Instruction pour signer des données
         elif ins == 0x10:  # INS pour "Signer des données"
             signature = self.sign_and_encrypt_data(data)
             return signature, 0x90, 0x00
 
-        # Instruction inconnue
+        # Data signature instruction
         else:
-            return b"", 0x6D, 0x00  # Instruction non supportée
+            return b"", 0x6D, 0x00  # Instruction not supported
 
     # Signs data with private key
     def sign_and_encrypt_data(self, data):
