@@ -16,7 +16,7 @@ if __name__ == "__main__":
         exit()  # Stop the program while the PIN verification failed
 
     # Display and select articles
-    print("\n=== selection of articles ===")
+    print("\n=== Selection of articles ===")
     articles = display_articles()  # Dispaly available articles
     total = select_art(articles)  # Allow selection and calculates the total amount 
 

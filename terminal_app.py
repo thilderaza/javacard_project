@@ -71,7 +71,7 @@ def send_apdu(data,applet):
             print("Error when the transmission APDU :", str(e))
             return None, None, None
 
-# Récupérer l'horodatage signé
+# Signed timestamp recovered
 def get_signed_timestamp():
     response = requests.get("http://localhost:5000/get_timestamp")
     if response.status_code == 200:
