@@ -2,51 +2,51 @@ from applet import SmartCardApplet
 from terminal_app import send_apdu, display_articles, select_art, get_signed_timestamp, send_to_server
 
 if __name__ == "__main__":
-    # simulated applet instance
+    # instance of the simulated applet
     applet = SmartCardApplet(pin="1234")
 
-    # PIN check
-    print("\n=== Vérification du PIN ===")
-    pin = input("Entrez votre code PIN : ").encode('utf-8')
-    response, sw1, sw2 = send_apdu(pin, "verify_pin", applet)  # # APDU to check PIN
+    # Verify PIN
+    print("\n=== Verification of PIN ===")
+    pin = input("Enter your PIN code : ").encode('utf-8')  # Ask user for the PIN 
+    response, sw1, sw2 = send_apdu(pin, "verify_pin", applet)  # APDU for verify the PIN
     if sw1 == 0x90:
-        print("PIN vérifié avec succès.")
+        print("PIN successfully verified.")
     else:
-        print("Échec de la vérification du PIN.")
-        exit()  # Arrête le programme si le PIN est incorrect
+        print("PIN verification failed.")
+        exit()  # Stop the program while the PIN verification failed
 
-    # Affichage et sélection des articles
-    print("\n=== Sélection des articles ===")
-    articles = display_articles()  # Affiche les articles disponibles
-    total = select_art(articles)  # Permet la sélection et calcule le total
+    # Display and select articles
+    print("\n=== selection of articles ===")
+    articles = display_articles()  # Dispaly available articles
+    total = select_art(articles)  # Allow selection and calculates the total amount 
 
-    # Affiche le total de la transaction
-    print(f"\nTotal de la transaction : ${total:.2f}")
+    # Display the amount of the transaction
+    print(f"\nAmount of the transaction : ${total:.2f}")
 
-    #  Récupération de l'horodatage signé depuis le serveur
-    print("\n=== Récupération de l'horodatage signé ===")
-    timestamp_data = get_signed_timestamp()  # Appel au serveur pour récupérer l'horodatage signé
+    #  Retrieve signed timestamp from le server
+    print("\n=== Retrieve signed timestamp ===")
+    timestamp_data = get_signed_timestamp()  # Call the server for retrieve signed timestamp
     if not timestamp_data:
-        print("Erreur : Impossible de récupérer l'horodatage signé.")
+        print("Error : Unable to retrieve signed timestamp.")
         exit()
 
-    # Prépare les données de la transaction
+    # Prepare transaction data
     transaction_data = f"total={int(total * 100)}&timestamp={timestamp_data['timestamp']}"
-    print(f"Transaction préparée : {transaction_data}")
+    print(f"Prepared transaction : {transaction_data}")
 
-    # Signature des données de la transaction par la carte
-    print("\n=== Signature de la transaction par la carte ===")
+    # Card signature of transaction data
+    print("\n=== Signature of the transaction for the card ===")
     apdu_sign_data = [0x80, 0x10, 0x00, 0x00, len(transaction_data)] + list(transaction_data.encode('utf-8'))
-    response, sw1, sw2 = applet.process_apdu(apdu_sign_data)  # Appel à l'applet pour signer
+    response, sw1, sw2 = applet.process_apdu(apdu_sign_data)  # Call Applet to signe
     if sw1 == 0x90:
-        print("Transaction signée avec succès.")
+        print("Transaction successfully signed.")
     else:
-        print("Échec de la signature de la transaction.")
+        print("Transaction signature failed.")
         exit()
 
-    # Envoi de la transaction signée au serveur pour vérification
-    print("\n=== Envoi de la transaction signée au serveur ===")
-    card_public_key = applet.get_public_key()  # Récupère la clé publique de la carte
-    send_to_server(transaction_data, response, card_public_key)  # Envoi au serveur
+    # Send signed transaction to server for verification
+    print("\n=== Sending the signed transaction to the server ===")
+    card_public_key = applet.get_public_key()  # Recovers the card's public key
+    send_to_server(transaction_data, response, card_public_key)  # Send to server
 
-    print("\n=== Fin de la transaction ===")
+    print("\n=== End of transaction ===")

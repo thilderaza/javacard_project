@@ -6,11 +6,11 @@ from smartcard.System import readers
 from applet import SmartCardApplet  
 import requests
 
-# Different articles disponible à l'achat
+# Different articles available
 def display_articles():
     articles = {
-        1:{"name": "Bouteille d'eau","prix": 1.10},
-        2:{"name": "Haribo Dragibus", "prix": 1.40}
+        1:{"name": "Water bottle","price": 1.10},
+        2:{"name": "Haribo Dragibus", "price": 1.40}
     }
     print("Articles")
     for id_art, art in articles.arts():
@@ -24,51 +24,51 @@ def select_art(articles):
 
     while True:
         try:
-            choice = int(input("Entrez le numéro de l'article à ajouter (0 pour terminer) : "))
+            choice = int(input("Enter the number of the article to add (0 to end) : "))
             if choice == 0:
                 break
             if choice in articles:
                 item = articles[choice]
-                total += item["prix"]
-                print(f"Ajouté : {item['name']} (${item['prix']:.2f})")
+                total += item["price"]
+                print(f"Added : {item['name']} (${item['prix']:.2f})")
             else:
-                print("Option invalide, veuillez réessayer.")
+                print("Invalid option, please try again.")
         except ValueError:
-            print("Entrée invalide, veuillez entrer un numéro.")
+            print("Invalid entry, please enter a number.")
     
     return total
 
 def send_apdu(data,applet):
-    # Récupère la liste des lecteurs disponibles
+    # Retrieves the list of available drives
     r = readers()
     if len(r) > 0:
-        print("Lecteurs disponibles: ",r)
+        print("Readers available: ",r)
     else:
-        print("Il n'y a pas de lecteur.")
+        print("There is no reader.")
 
     reader = r[0]
     connection = reader.createConnection()
     connection.connect()
-    print("Vous êtes connecté au lecteur: ",reader)
+    print("You are connected to the reader: ",reader)
 
 
-    #Commande APDU (transmission des données)
+    #Command APDU (transmission of data)
     APDU = [0x80, 0x10, 0x00, 0x00, len(data)] + data
     try:
         response,sw1,sw2 = connection.transmit(APDU)
 
-        #sw valeurs retournées par la carte
-        # Succès
+        # sw values returned by the card
+        # Success
         if sw1 == 0x90 and sw2 == 0x00:
-            print("Transaction réalisé.")
+            print("Transaction completed.")
 
-        # Erreur (Du à un problème d'accès(PIN incorrecte/non vérifié, probleme longueur data, ou fichier) )
+        # Error (Due to an access problem (incorrect/unverified PIN, data or file length problem) )
         else:
-            print(f"Erreur : SW1={sw1}, SW2={sw2}")
+            print(f"Error : SW1={sw1}, SW2={sw2}")
         response, sw1, sw2 = applet.process_apdu(APDU)
         return response, sw1, sw2
     except Exception as e:
-            print("Erreur lors de la transmission APDU :", str(e))
+            print("Error when the transmission APDU :", str(e))
             return None, None, None
 
 # Récupérer l'horodatage signé
@@ -76,13 +76,13 @@ def get_signed_timestamp():
     response = requests.get("http://localhost:5000/get_timestamp")
     if response.status_code == 200:
         data = response.json()
-        print("Horodatage signé récupéré :", data)
+        print("Signed timestamp recovered :", data)
         return data
     else:
-        print("Erreur lors de la récupération de l'horodatage :", response.json())
+        print("Error when the timestamp recovery :", response.json())
         return None
     
-# Envoyer la transaction signée au serveur
+# Send the signed transaction to server
 def send_to_server(transaction, signature, card_public_key):
 
     response = requests.post("http://localhost:5000/verify_transaction", json={
@@ -90,4 +90,4 @@ def send_to_server(transaction, signature, card_public_key):
         "signature": signature.hex(),
         "card_public_key": card_public_key.decode('utf-8')
     })
-    print("Réponse du serveur :", response.json())
+    print("Response of serveur :", response.json())

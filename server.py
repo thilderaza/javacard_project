@@ -5,7 +5,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# paire de clés RSA pour le serveur
+# Pair of RSA keys for the server
 server_private_key = rsa.generate_private_key(
     public_exponent=65537,
     key_size=2048
@@ -19,11 +19,11 @@ def verify_transaction():
     signature = bytes.fromhex(data["signature"])
     card_public_key_pem = data["card_public_key"]
 
-    # Charger la clé publique de la carte
+    # Charge the public key of the card
     from cryptography.hazmat.primitives import serialization
     card_public_key = serialization.load_pem_public_key(card_public_key_pem.encode('utf-8'))
 
-    # Valider la signature
+    # Validate the signature
     try:
         card_public_key.verify(
             signature,
@@ -32,9 +32,9 @@ def verify_transaction():
             hashes.SHA256()
         )
         transactions.append({"transaction": transaction.decode('utf-8'), "verified": True})
-        return jsonify({"status": "success", "message": "Transaction vérifiée avec succès"}), 200
+        return jsonify({"status": "success", "message": "Transaction successfully verified"}), 200
     except Exception as e:
-        return jsonify({"status": "failure", "message": f"Signature invalide : {str(e)}"}), 400
+        return jsonify({"status": "failure", "message": f"Signature invalidated : {str(e)}"}), 400
 
 @app.route("/get_timestamp", methods=["GET"])
 def get_timestamp():
@@ -52,13 +52,13 @@ def get_timestamp():
 @app.route("/is_card_stolen", methods=["GET"])
 def is_card_stolen():
     """
-    Endpoint pour vérifier si une carte est volée.
-    Paramètre : card_id=<ID de la carte>
+    Endpoint to check if a card is stolen.
+    Parameter : card_id=<ID de la carte>
     """
     card_id = request.args.get("card_id")
     if card_id in stolen_cards:
-        return jsonify({"status": "stolen", "message": f"Carte {card_id} est volée"}), 200
-    return jsonify({"status": "ok", "message": f"Carte {card_id} n'est pas volée"}), 200
+        return jsonify({"status": "stolen", "message": f"Card {card_id} is stolen"}), 200
+    return jsonify({"status": "ok", "message": f"Card {card_id} is not stolen"}), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

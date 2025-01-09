@@ -1,19 +1,20 @@
 # Projet JavaCard 2024
 
-## Partie 1 : Développment de l'applet JavaCard
+## Part 1: JavaCard applet development
 
-## Partie 2 : Développment de l'application terminal
+## Part 2: Terminal application development
 
-### Application de terminal :
-    - Elle devra envoyer des données de transaction vers notre carte
-    - Ainsi que les informations de la carte.
-    - Transmettre les informations de la carte vers notre serveur de vérification.
+### Terminal application :
+    - It should send the transaction data to our card
+    - As well as the card information.
+    - Transmit card information to the verification server.
   
-   Pour envoyer des APDU à une carte, l'application doit d'abord se connecter à une carte via un lecteur de carte à puce. (https://pyscard.sourceforge.io/user-guide.html#smart-cards)
+   To send the APDU to a card, the application must firstly connect to a card via a smart card reader.
+   (https://pyscard.sourceforge.io/user-guide.html#smart-cards)
 
-   Package à installer : 
+   Package to install : 
    ```pip install pyscard```
 
-La commande APDU est une structure utilisée pour échanger des données avec une carte à puce.
+The command APDU is a structure used to exchange data with a smart card.
 
-On choisit les articles qui nous intéresses (les prix sont indiqués), pusi on sauvegarde le total des articles, et le total sera transmis avec la date, l'heure et l'id de la carte.
+We select the articles that we're interested in (the prices are indicated), then we save the amount of the price of the articles, and the amount will be transmitted with the date, time and card id.
